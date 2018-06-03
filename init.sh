@@ -12,7 +12,7 @@ MC_GROUPADD="/usr/sbin/groupadd"
 MC_USERDEL="/usr/sbin/userdel"
 MC_GROUPDEL="/usr/sbin/groupdel"
 install="1"
-FILE="$DIR_ROOT/install.txt"
+FILE="$DIR_ROOT/multicraft-install.txt"
 contentFile="";
 if [ -f $FILE ]; then
    install=`cat $FILE`
@@ -22,16 +22,14 @@ echo "install : $install"
 
 ### Multicraft user & directory setup
 
-echo
-echo "Création de l'utilisateur '$MC_USER'"
 "$MC_GROUPADD" "$MC_USER"
 if [ ! "$?" = "0" ]; then
-    echo "Erreur: impossible de créer le group pour l'utilisateur '$MC_USER'!"
+    echo "Unable to Create User Group '$MC_USER'!"
 fi
 
 "$MC_USERADD" "$MC_USER" -g "$MC_USER" -s /bin/false
 if [ ! "$?" = "0" ]; then
-    echo "Erreur: Impossible de créer l'utilisateur '$MC_USER'!"
+    echo "Unable to Create User '$MC_USER'!"
 fi
 
 if [ "$install" -eq "1" ]
@@ -59,8 +57,9 @@ then
     MC_ZIP="/usr/bin/zip"
     MC_UNZIP="/usr/bin/unzip"
 
+    cd "$DIR_INSTALL"
     wget -q https://www.multicraft.org/download/linux64
-    unzip -o linux64 -d $DIR_ROOT
+    tar -xzf linux64
     rm -f linux64
     cd "$DIR_INSTALL/multicraft"
 
@@ -196,8 +195,8 @@ then
 
 elif [ "$install" -eq "0" ]
 then
-    if [ -f "$MC_WEB_DIR/install.php" -a -f "$MC_WEB_DIR/protected/config/config.php" -a -f "$MC_WEB_DATA" ]; then
-        rm "$MC_WEB_DIR/install.php"
+    if [ -f "$MC_WEB_DIR/multicraft-install.php" -a -f "$MC_WEB_DIR/protected/config/config.php" -a -f "$MC_WEB_DATA" ]; then
+        rm "$MC_WEB_DIR/multicraft-install.php"
     fi
 fi
 echo "install : $install"
