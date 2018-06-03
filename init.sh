@@ -1,7 +1,6 @@
 #!/bin/bash
 
 DIR_ROOT="/mc"
-DIR_INSTALL="$DIR_ROOT/install"
 MC_DIR="$DIR_ROOT/multicraft"
 MC_WEB_DIR="$DIR_ROOT/panel"
 MC_WEB_DATAName="data.db"
@@ -57,11 +56,11 @@ then
     MC_ZIP="/usr/bin/zip"
     MC_UNZIP="/usr/bin/unzip"
 
-    cd "$DIR_INSTALL"
+    cd "$MC_DIR"
     wget -q https://www.multicraft.org/download/linux64
     tar -xzf linux64
     rm -f linux64
-    cd "$DIR_INSTALL/multicraft"
+    cd "$MC_DIR/multicraft"
 
     echo
     echo "***"
@@ -148,7 +147,7 @@ then
     done
 
     echo
-    echo "Adjusting Directory Permissions '$MC_DIR' pour '$MC_USER'"
+    echo "Adjusting Directory Permissions '$MC_DIR' for '$MC_USER'"
     chown -R "$MC_USER":"$MC_USER" "$MC_DIR"
     chmod -R 755 "$MC_DIR"
     chmod 555 "$MC_DIR/launcher/launcher"
@@ -181,8 +180,6 @@ then
     echo "***"
     echo "*** Installation complete!"
     echo "***"
-    echo
-    echo "Veuillez lire:"
     echo
     echo "Before starting the daemon, you must run the control panel installation program to initialize your database. (Example: example: http: //your.address/multicraft/install.php)"
     echo
