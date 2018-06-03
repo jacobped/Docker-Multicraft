@@ -68,7 +68,7 @@ then
     echo "***"
     echo
 
-    chown -R "$MC_USER":"$MC_USER" "$MC_DIR"
+    ls | grep -v servers | xargs -n1 sudo chown -R "$MC_USER":"$MC_USER"
     chmod -R 755 "$MC_DIR"
     rm -f "$MC_DIR/bin/_weakref.so"
     rm -f "$MC_DIR/bin/collections.so"
