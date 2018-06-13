@@ -68,7 +68,7 @@ then
     echo "***"
     echo
 
-    ls | grep -v servers | xargs -n1 sudo chown -R "$MC_USER":"$MC_USER"
+    chown  "$MC_USER":"$MC_USER" -R $(ls | awk '{if($1 != "servers"){ print $1 }}')
     chmod -R 755 "$MC_DIR"
     rm -f "$MC_DIR/bin/_weakref.so"
     rm -f "$MC_DIR/bin/collections.so"
