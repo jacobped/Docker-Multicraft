@@ -148,7 +148,8 @@ then
 
     echo
     echo "Adjusting Directory Permissions '$MC_DIR' for '$MC_USER'"
-    chown -R "$MC_USER":"$MC_USER" "$MC_DIR"
+    cd "$MC_DIR"
+    chown -R "$MC_USER":"$MC_USER" -R $(ls | awk '{if($1 != "servers"){ print $1 }}')
     chmod -R 755 "$MC_DIR"
     chmod 555 "$MC_DIR/launcher/launcher"
     chmod 555 "$MC_DIR/scripts/getquota.sh"
