@@ -55,9 +55,10 @@ then
     MC_JAVA="/usr/bin/java"
     MC_ZIP="/usr/bin/zip"
     MC_UNZIP="/usr/bin/unzip"
+    MC_DOWNLOAD=${DOWNLOAD_URL:-"https://www.multicraft.org/download/linux64"}
 
     cd "$MC_DIR"
-    wget -q https://www.multicraft.org/download/linux64
+    wget -q "$MC_DOWNLOAD"
     tar -xzf linux64
     rm -f linux64
     cd "$MC_DIR/multicraft"
@@ -183,8 +184,6 @@ then
     echo "***"
     echo
     echo "Before starting the daemon, you must run the control panel installation program to initialize your database. (Example: example: http: //your.address/multicraft/install.php)"
-    echo
-    echo "Le daemon ne fonctionnera pas correctement tant que la base de données n'a pas été initialisée."
     echo
     echo "$MC_DIR/bin/multicraft start"
     echo
