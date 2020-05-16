@@ -20,3 +20,14 @@ Map the following Variables as needed. (The following are defaulted variables)
 - MC_FTP_PORT="21"
 - MC_FTP_SERVER="y"
 - MC_KEY=""
+
+
+## Helpfull commands
+
+```
+
+docker-compose -f "docker-compose.yml" up -d --build
+docker logs docker-multicraft_multicraft_1 -f  
+docker-compose -f "docker-compose.yml" rm -f; docker volume prune -f; docker system prune -f
+
+```

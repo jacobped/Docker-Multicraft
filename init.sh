@@ -63,9 +63,13 @@ then
         mkdir "$MC_DIR"
     fi
     cd "$DIR_ROOT"
+    echo "Downloading Multicraft installation file"
     wget -q "$MC_DOWNLOAD"
+    echo "Done downloading. Extracting.."
     tar -xzf linux64
     rm -f linux64
+    echo "Done extracting."
+
     cd "$MC_DIR"
 
     echo
