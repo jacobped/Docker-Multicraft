@@ -171,14 +171,15 @@ then
         chmod 4550 "$MC_DIR/bin/useragent"
     fi
     chmod 755 "$MC_DIR/jar/"*.jar 2> /dev/null
+    "$MC_DIR/bin/multicraft" set_permissions
 
     ### Generate Web Panel config
     echo "Generating Web Panel config"
 
     function replacePanelConfig() {
-        WEB_CONFIG_FILE=${MC_WEB_DIR}/protected/config/config.php
+        WEB_CONFIG_FILE=${MC_WEB_DIR}/protected/config/config.php.dist
 
-        cp -f ${CONFIG_DIR}/panel-config.php ${WEB_CONFIG_FILE}
+        cp -f ${CONFIG_DIR}/panel-config.php.dist ${WEB_CONFIG_FILE}
 
         stringReplace() {
             local search=$1
@@ -249,7 +250,7 @@ echo "<VirtualHost *:80>
 service apache2 restart
 $MC_DIR/bin/multicraft start
 
-if [ "$DEBUG" -eq "true" ]; then
+if [ "$DEBUG" = "true" ]; then
     while true; do
         sleep 1
     done

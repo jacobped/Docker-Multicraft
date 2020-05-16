@@ -25,9 +25,12 @@ Map the following Variables as needed. (The following are defaulted variables)
 ## Helpfull commands
 
 ```
-
 docker-compose -f "docker-compose.yml" up -d --build
 docker logs docker-multicraft_multicraft_1 -f  
-docker-compose -f "docker-compose.yml" rm -f; docker volume prune -f; docker system prune -f
+docker exec -it docker-multicraft_multicraft_1 /bin/bash
+```
 
+Remove everything
+```
+docker-compose -f "docker-compose.yml" down;  docker-compose -f "docker-compose.yml" rm -f; docker volume prune -f; docker system prune -f
 ```
