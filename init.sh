@@ -11,7 +11,7 @@ MC_GROUPADD="/usr/sbin/groupadd"
 MC_USERDEL="/usr/sbin/userdel"
 MC_GROUPDEL="/usr/sbin/groupdel"
 install="1"
-FILE="$DIR_ROOT/multicraft-install.txt"
+FILE="$DIR_ROOT/install.txt"
 contentFile="";
 if [ -f $FILE ]; then
    install=`cat $FILE`
@@ -219,17 +219,17 @@ then
     echo "*** Installation complete!"
     echo "***"
     echo
-    echo "Before starting the daemon, you must run the control panel installation program to initialize your database. (Example: example: http: //your.address/multicraft/install.php)"
+    echo "Before the daemon can be used, you must run the control panel installation program to initialize your database. (Example: example: http: //your.address/multicraft/install.php)"
     echo
-    echo "$MC_DIR/bin/multicraft start"
+    echo "During the install process, is might take the daemon a moment to become available for the panel."
     echo
 
     cd "$MC_DIR"
 
 elif [ "$install" -eq "0" ]
 then
-    if [ -f "$MC_WEB_DIR/multicraft-install.php" -a -f "$MC_WEB_DIR/protected/config/config.php" -a -f "$MC_WEB_DATA" ]; then
-        rm "$MC_WEB_DIR/multicraft-install.php"
+    if [ -f "$MC_WEB_DIR/install.php" -a -f "$MC_WEB_DIR/protected/config/config.php" -a -f "$MC_WEB_DATA" ]; then
+        rm "$MC_WEB_DIR/install.php"
     fi
 fi
 echo "install : $install"
