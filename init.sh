@@ -46,7 +46,7 @@ then
     MC_FTP_PORT=${MC_FTP_PORT:-"21"}
     MC_FTP_SERVER=${MC_FTP_SERVER:-"y"}
     MC_DB_TYPE="sqlite"
-    MC_KEY=${MC_KEY:-"0B10-A841-E555-3B78"}
+    MC_KEY=${MC_KEY:-"no"}
     MC_LOCAL="y"
     MC_MULTIUSER="y"
     MC_PLUGINS="n"
@@ -56,12 +56,17 @@ then
     MC_ZIP="/usr/bin/zip"
     MC_UNZIP="/usr/bin/unzip"
     MC_DOWNLOAD=${DOWNLOAD_URL:-"https://www.multicraft.org/download/linux64"}
+    CFG="$MC_DIR/multicraft.conf"
 
-    cd "$MC_DIR"
+ 
+    if [ ! -d "$MC_DIR" ]; then
+        mkdir "$MC_DIR"
+    fi
+    cd "$DIR_ROOT"
     wget -q "$MC_DOWNLOAD"
     tar -xzf linux64
     rm -f linux64
-    cd "$MC_DIR/multicraft"
+    cd "$MC_DIR"
 
     echo
     echo "***"
@@ -83,6 +88,7 @@ then
     fi
 
     ### Generate config
+    echo "Generating daemon config"
 
     function repl {
         LINE="$SETTING = `echo $1 | sed "s/['\\&,]/\\\\&/g"`"
@@ -155,14 +161,36 @@ then
     chmod 555 "$MC_DIR/launcher/launcher"
     chmod 555 "$MC_DIR/scripts/getquota.sh"
 
-    echo "Special Permissions"
+    echo "Setting special permissions"
     if [ "$MC_MULTIUSER" = "y" ]; then
         chown 0:"$MC_USER" "$MC_DIR/bin/useragent"
         chmod 4550 "$MC_DIR/bin/useragent"
     fi
     chmod 755 "$MC_DIR/jar/"*.jar 2> /dev/null
 
+    ### Generate Web Panel config
+    echo "Generating Web Panel config"
+
+    function replacePanelConfig() {
+        WEB_CONFIG_FILE=${MC_WEB_DIR}/protected/config/config.php
+
+        cp -f ${CONFIG_DIR}/panel-config.php ${WEB_CONFIG_FILE}
+
+        stringReplace() {
+            local search=$1
+            local replace=$2
+            # Note the double quotes
+            sed -i "s;${search};${replace};g" "$3"
+        }
+
+        stringReplace "%%daemon_password%%" "$MC_DAEMON_PW" "$WEB_CONFIG_FILE"
+        stringReplace "%%MC_WEB_DIR%%" "$MC_WEB_DIR" "$WEB_CONFIG_FILE"
+        stringReplace "%%MC_DIR%%" "$MC_DIR" "$WEB_CONFIG_FILE"
+
+    }
+    
     ### Install PHP frontend
+    echo "Installing PHP frontend"
 
     if [ "$MC_LOCAL" = "y" ]; then
         echo "Creating Web directory: '$MC_WEB_DIR'"
@@ -171,6 +199,9 @@ then
         echo "Installing the Web Panel"
         cp -a panel/* "$MC_WEB_DIR"
         cp -a panel/.ht* "$MC_WEB_DIR"
+
+        replacePanelConfig
+
         chown -R "$MC_WEB_USER":1000 "$MC_WEB_DIR"
         chmod -R o-rwx "$MC_WEB_DIR"
     fi
@@ -212,6 +243,12 @@ echo "<VirtualHost *:80>
 </VirtualHost>" > /etc/apache2/sites-enabled/000-default.conf
 
 service apache2 restart
-/mc/multicraft/bin/multicraft start
+$MC_DIR/bin/multicraft start
 
-/bin/bash
+if [ "$DEBUG" -eq "true" ]; then
+    while true; do
+        sleep 1
+    done
+fi
+
+tail -f $MC_DIR/multicraft.log
